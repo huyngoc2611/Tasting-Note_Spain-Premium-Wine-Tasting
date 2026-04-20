@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tasting Notes | Pago & Luis Cañas</title>
+  <title>Technical Sheets | Luis Cañas & Pago de Cirsus</title>
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -20,37 +22,12 @@
       padding: 32px 0 48px;
     }
 
-    .hero {
+    .hero,
+    .viewer {
       background: #ffffff;
       border: 1px solid #e5e5e5;
       border-radius: 12px;
       padding: 24px;
-      margin-bottom: 20px;
-    }
-
-    .logo-row {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .logo-box {
-      height: 96px;
-      border: 1px dashed #cfcfcf;
-      border-radius: 10px;
-      background: #fafafa;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 12px;
-    }
-
-    .logo-box img {
-      max-width: 100%;
-      max-height: 72px;
-      object-fit: contain;
     }
 
     .title {
@@ -65,11 +42,41 @@
       line-height: 1.5;
     }
 
-    .toolbar {
+    .brand-section {
+      margin-top: 32px;
+      padding-top: 28px;
+      border-top: 1px solid #ececec;
+    }
+
+    .brand-section:first-of-type {
+      margin-top: 24px;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .brand-logo-box {
+      min-height: 88px;
+      border: 1px dashed #cfcfcf;
+      border-radius: 12px;
+      background: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .brand-logo-box img {
+      max-width: 100%;
+      max-height: 58px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-buttons {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 24px;
     }
 
     .wine-btn,
@@ -93,10 +100,6 @@
 
     .viewer {
       display: none;
-      background: #ffffff;
-      border: 1px solid #e5e5e5;
-      border-radius: 12px;
-      padding: 20px;
     }
 
     .viewer-top {
@@ -141,8 +144,9 @@
     }
 
     @media (max-width: 768px) {
-      .logo-row {
-        grid-template-columns: 1fr;
+      .wrap {
+        width: min(100%, calc(100% - 24px));
+        padding: 20px 0 32px;
       }
 
       .title {
@@ -152,6 +156,15 @@
       .viewer-title {
         font-size: 20px;
       }
+
+      .brand-logo-box {
+        min-height: 76px;
+        padding: 14px;
+      }
+
+      .brand-logo-box img {
+        max-height: 46px;
+      }
     }
   </style>
 </head>
@@ -160,22 +173,12 @@
 
     <!-- Màn hình chính -->
     <section class="hero" id="homeScreen">
-      <div class="logo-row">
-       <div class="logo-box">
-        <img src="Logo_PAGO-de-CIRSUS-Full-01.png" alt="Pago logo" />
-      </div>
-      
-      <div class="logo-box">
-        <img src="luis-canas-logo-png-transparent.png" alt="Luis Cañas logo" />
-      </div>
-      </div>
-
       <h1 class="title">Technical Sheets</h1>
       <p class="desc">
         Chọn tên chai rượu bên dưới để xem technical sheet.
       </p>
 
-      <div class="toolbar" id="wineButtons"></div>
+      <div id="wineSections"></div>
     </section>
 
     <!-- Màn hình xem technical sheet -->
@@ -195,77 +198,118 @@
   <script>
     const wines = [
       {
-        id: 'pago-la-a',
-        name: 'Pago de Cirsus La A',
-        image: 'Pago de Cirsus La A (EN)-01.jpg'
-      },
-      {
-        id: 'pago-chardonnay',
-        name: 'Pago de Cirsus Chardonnay',
-        image: 'Pago de Cirsus Chardonnay Fermentado en Barrica (EN).jpg'
-      },
-      {
-        id: 'pago-cuvee-especial',
-        name: 'Pago de Cirsus Cuvée Especial',
-        image: 'Pago de Cirsus Cuvee Especial (EN) (1).jpg'
-      },
-      {
-        id: 'pago-vendimia',
-        name: 'Pago de Cirsus Vendimia Seleccionada',
-        image: 'Pago de Cirsus Vendimia Seleccionada Edición Especial (Limited Edition) (EN) (1).jpg'
-      },
-      {
         id: 'luis-vinas-viejas-blanco',
+        brand: 'luis',
         name: 'Luis Cañas Viñas Viejas Blanco',
         image: 'Luis Cañas Vinas Viejas Blanco En copy.jpg'
       },
       {
         id: 'luis-gran-reserva',
+        brand: 'luis',
         name: 'Luis Cañas Gran Reserva',
         image: 'Luis Cañas Gran Reserva (EN).jpg'
       },
       {
         id: 'luis-hiru-3-racimos',
+        brand: 'luis',
         name: 'Luis Cañas Hiru 3 Racimos',
         image: 'Luis Cañas Hiru 3 Racimos (EN).jpg'
       },
       {
         id: 'luis-maceracion-carbonica',
+        brand: 'luis',
         name: 'Luis Cañas Tinto Maceración Carbónica',
         image: 'Luis Cañas Tinto Maceración Carbónica (EN) (1).jpg'
       },
       {
         id: 'luis-crianza',
+        brand: 'luis',
         name: 'Luis Cañas Crianza',
         image: 'Luis Cañas Crianza (EN).jpg'
       },
       {
         id: 'luis-reserva-familia',
+        brand: 'luis',
         name: 'Luis Cañas Reserva Familia',
         image: 'Luis Cañas Reserva Familia (EN) copy.jpg'
+      },
+      {
+        id: 'pago-la-a',
+        brand: 'pago',
+        name: 'Pago de Cirsus La A',
+        image: 'Pago de Cirsus La A (EN)-01.jpg'
+      },
+      {
+        id: 'pago-chardonnay',
+        brand: 'pago',
+        name: 'Pago de Cirsus Chardonnay',
+        image: 'Pago de Cirsus Chardonnay Fermentado en Barrica (EN).jpg'
+      },
+      {
+        id: 'pago-cuvee-especial',
+        brand: 'pago',
+        name: 'Pago de Cirsus Cuvée Especial',
+        image: 'Pago de Cirsus Cuvee Especial (EN) (1).jpg'
+      },
+      {
+        id: 'pago-vendimia',
+        brand: 'pago',
+        name: 'Pago de Cirsus Vendimia Seleccionada',
+        image: 'Pago de Cirsus Vendimia Seleccionada Edición Especial (Limited Edition) (EN) (1).jpg'
       }
     ];
 
-    const wineButtons = document.getElementById('wineButtons');
+    const brands = [
+      {
+        id: 'luis',
+        logo: 'luis-canas-logo-png-transparent.png',
+        alt: 'Luis Cañas logo'
+      },
+      {
+        id: 'pago',
+        logo: 'Logo_PAGO-de-CIRSUS-Full-01.png',
+        alt: 'Pago de Cirsus logo'
+      }
+    ];
+
+    const wineSections = document.getElementById('wineSections');
     const homeScreen = document.getElementById('homeScreen');
     const viewerScreen = document.getElementById('viewerScreen');
     const viewerTitle = document.getElementById('viewerTitle');
     const sheetBox = document.getElementById('sheetBox');
     const backBtn = document.getElementById('backBtn');
 
-    function renderButtons() {
-      wineButtons.innerHTML = '';
+    function renderHomeSections() {
+      wineSections.innerHTML = '';
 
-      wines.forEach((wine) => {
-        const button = document.createElement('button');
-        button.className = 'wine-btn';
-        button.textContent = wine.name;
+      brands.forEach((brand) => {
+        const section = document.createElement('div');
+        section.className = 'brand-section';
 
-        button.addEventListener('click', () => {
-          openWineSheet(wine);
+        const brandWines = wines.filter((wine) => wine.brand === brand.id);
+
+        section.innerHTML = `
+          <div class="brand-logo-box">
+            <img src="${brand.logo}" alt="${brand.alt}" />
+          </div>
+          <div class="brand-buttons"></div>
+        `;
+
+        const buttonContainer = section.querySelector('.brand-buttons');
+
+        brandWines.forEach((wine) => {
+          const button = document.createElement('button');
+          button.className = 'wine-btn';
+          button.textContent = wine.name;
+
+          button.addEventListener('click', () => {
+            openWineSheet(wine);
+          });
+
+          buttonContainer.appendChild(button);
         });
 
-        wineButtons.appendChild(button);
+        wineSections.appendChild(section);
       });
     }
 
@@ -274,9 +318,9 @@
 
       if (wine.image) {
         sheetBox.innerHTML = `
-          <img 
-            src="${wine.image}" 
-            alt="${wine.name}" 
+          <img
+            src="${wine.image}"
+            alt="${wine.name}"
             onerror="this.parentElement.innerHTML='<div class=&quot;placeholder&quot;>Không tìm thấy file ảnh.<br>Hãy kiểm tra lại tên file và đảm bảo ảnh đã được upload cùng cấp với index.html.</div>'"
           />
         `;
@@ -299,7 +343,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    renderButtons();
+    renderHomeSections();
   </script>
 </body>
 </html>
